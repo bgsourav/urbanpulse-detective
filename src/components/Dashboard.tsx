@@ -1,21 +1,69 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Settings, User, MapPin, Zap, Bell, Sun, Moon } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import CityMap from './CityMap';
 import AlertsPanel from './AlertsPanel';
 import TopicSelection from './TopicSelection';
 
+const GOOGLE_MAPS_API_KEY = 'AIzaSyCcYX4UOrbhGNJRCFxhFsGPkQj4C_qPnFY';
+const CITY_CENTER = { lat: 12.9141, lng: 77.6460 };
+
 const Dashboard = () => {
   const [showTopicSelection, setShowTopicSelection] = useState(false);
-  const [userInterests, setUserInterests] = useState([]);
+  const [userInterests, setUserInterests] = useState<string[]>([]);
   const { theme, setTheme } = useTheme();
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstance = useRef<google.maps.Map>();
 
-  const handleTopicSelectionComplete = (interests) => {
+  const handleTopicSelectionComplete = (interests: string[]) => {
     setUserInterests(interests);
     console.log('User selected interests:', interests);
   };
+
+  // Load Google Maps script once
+  useEffect(() => {
+    if (typeof window === 'undefined' || mapInstance.current) return;
+
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}`;
+    script.async = true;
+    script.defer = true;
+    script.onload = () => {
+      if (!mapRef.current) return;
+      // initialize map
+      mapInstance.current = new window.google.maps.Map(mapRef.current, {
+        center: CITY_CENTER,
+        zoom: 15,
+        disableDefaultUI: true,
+      });
+
+      // sample marker
+      new window.google.maps.Marker({
+        position: CITY_CENTER,
+        map: mapInstance.current,
+        title: 'HSR Layout Center',
+      });
+
+      // clickable radius circle
+      const circle = new window.google.maps.Circle({
+        center: CITY_CENTER,
+        radius: 500, // meters
+        map: mapInstance.current,
+        fillColor: '#FF0000',
+        fillOpacity: 0.2,
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.5,
+        strokeWeight: 2,
+      });
+
+      circle.addListener('click', () => {
+        alert('You clicked inside the 500 m radius!');
+      });
+    };
+
+    document.head.appendChild(script);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -30,7 +78,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-foreground">
-                  Urban Pulse Detective
+                  Pulse Bengaluru
                 </h1>
                 <p className="text-xs text-muted-foreground">
                   Real-time city intelligence platform
@@ -72,7 +120,7 @@ const Dashboard = () => {
       {/* Main Content */}
       <main className="flex flex-1 overflow-hidden">
         {/* Map Section */}
-        <div className="flex-1 p-6">
+        <div className="flex-1 p-6 relative">
           <div className="mb-4 flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
@@ -99,19 +147,21 @@ const Dashboard = () => {
             </div>
           </div>
           
-          <div className="relative">
-            <CityMap className="h-[calc(100vh-180px)]" />
-            
-            {/* Topic Selection Button */}
-            <Button
-              onClick={() => setShowTopicSelection(true)}
-              className="absolute top-4 right-4 bg-primary/90 hover:bg-primary shadow-glow-primary backdrop-blur-sm"
-              size="sm"
-            >
-              <Settings className="w-4 h-4 mr-2" />
-              Topics
-            </Button>
-          </div>
+          {/* Map Container */}
+          <div
+            ref={mapRef}
+            className="h-[calc(100vh-180px)] w-full rounded-lg shadow-lg"
+          />
+
+          {/* Topic Selection Button */}
+          <Button
+            onClick={() => setShowTopicSelection(true)}
+            className="absolute top-4 right-4 bg-primary/90 hover:bg-primary shadow-glow-primary backdrop-blur-sm"
+            size="sm"
+          >
+            <Settings className="w-4 h-4 mr-2" />
+            Topics
+          </Button>
         </div>
 
         {/* Alerts Panel */}
