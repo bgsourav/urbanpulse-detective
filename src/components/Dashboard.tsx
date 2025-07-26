@@ -171,7 +171,7 @@ const Dashboard = () => {
             size="sm"
           >
             <Settings className="w-4 h-4 mr-2" />
-            Topics
+            Topic
           </Button>
         </div>
         {/* Alerts Panel */}
