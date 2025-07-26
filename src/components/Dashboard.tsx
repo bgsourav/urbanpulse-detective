@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { Search, Settings, User, MapPin, Zap, Bell } from 'lucide-react';
+import { Search, Settings, User, MapPin, Zap, Bell, Sun, Moon } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import CityMap from './CityMap';
 import AlertsPanel from './AlertsPanel';
 import TopicSelection from './TopicSelection';
@@ -11,6 +12,7 @@ const Dashboard = () => {
   const [showTopicSelection, setShowTopicSelection] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState('HSR Layout, Bengaluru');
   const [userInterests, setUserInterests] = useState([]);
+  const { theme, setTheme } = useTheme();
 
   const handleTopicSelectionComplete = (interests) => {
     setUserInterests(interests);
@@ -67,6 +69,15 @@ const Dashboard = () => {
               <Button
                 variant="ghost"
                 size="sm"
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              </Button>
+              
+              <Button
+                variant="ghost"
+                size="sm"
                 className="text-muted-foreground hover:text-foreground"
               >
                 <User className="w-4 h-4" />
@@ -77,39 +88,41 @@ const Dashboard = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-120px)]">
-          {/* Map Section */}
-          <div className="lg:col-span-2">
-            <div className="mb-4 flex items-center justify-between">
-              <div>
-                <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
-                  <MapPin className="w-5 h-5 text-primary" />
-                  City Alert Hub
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  Live monitoring of {selectedLocation}
-                </p>
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1">
-                  <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
-                  <span className="text-xs text-muted-foreground">Live</span>
-                </div>
-              </div>
+      <main className="flex flex-1 overflow-hidden">
+        {/* Map Section */}
+        <div className="flex-1 p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-primary" />
+                City Alert Hub
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Live monitoring of {selectedLocation}
+              </p>
             </div>
             
-            <CityMap 
-              className="h-full min-h-[500px]"
-              onLocationSelect={setSelectedLocation}
-            />
+            <div className="flex items-center gap-4">
+              {/* Filter Buttons */}
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" className="text-xs">Traffic</Button>
+                <Button variant="outline" size="sm" className="text-xs">Weather</Button>
+                <Button variant="outline" size="sm" className="text-xs">Public Safety</Button>
+              </div>
+              
+              <div className="flex items-center gap-1">
+                <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
+                <span className="text-xs text-muted-foreground">Live</span>
+              </div>
+            </div>
           </div>
+          
+          <CityMap className="h-[calc(100vh-180px)]" />
+        </div>
 
-          {/* Alerts Panel */}
-          <div className="lg:col-span-1">
-            <AlertsPanel className="h-full" />
-          </div>
+        {/* Alerts Panel */}
+        <div className="w-80 border-l border-border">
+          <AlertsPanel className="h-full" />
         </div>
       </main>
 

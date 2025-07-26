@@ -7,6 +7,10 @@ import { X, Check, ArrowLeft } from 'lucide-react';
 import { apiService } from '@/services/api';
 
 const INTERESTS = [
+  { id: 'cycling', label: 'Cycling', emoji: '🚴' },
+  { id: 'running', label: 'Running', emoji: '🏃' },
+  { id: 'restaurants', label: 'Restaurants', emoji: '🍽️' },
+  { id: 'travelling-by-road', label: 'Travelling by Road', emoji: '🛣️' },
   { id: 'aviation', label: 'Aviation', emoji: '✈️' },
   { id: 'art', label: 'Art', emoji: '🎨' },
   { id: 'crypto', label: 'Crypto', emoji: '₿' },

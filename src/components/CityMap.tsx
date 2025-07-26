@@ -2,11 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { cn } from '@/lib/utils';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Search, MapPin, Loader } from 'lucide-react';
+import { MapPin, Loader } from 'lucide-react';
 
-const CityMap = ({ alerts = [], onLocationSelect, className }) => {
+const CityMap = ({ alerts = [], className }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
   const [mapboxToken, setMapboxToken] = useState('');
@@ -120,18 +118,24 @@ const CityMap = ({ alerts = [], onLocationSelect, className }) => {
     return glows[type] || 'rgba(107, 114, 128, 0.5)';
   };
 
-  const handleTokenSubmit = () => {
-    if (!mapboxToken.trim()) return;
-    
-    setIsLoading(true);
-    setTimeout(() => {
-      initializeMap(mapboxToken);
+  const loadConfig = async () => {
+    try {
+      const response = await fetch('/config.json');
+      const config = await response.json();
+      const token = config.mapbox.accessToken;
+      
+      setMapboxToken(token);
+      initializeMap(token);
       setShowTokenInput(false);
-      setIsLoading(false);
-    }, 1000);
+    } catch (error) {
+      console.error('Failed to load config:', error);
+      setShowTokenInput(true);
+    }
   };
 
   useEffect(() => {
+    loadConfig();
+    
     return () => {
       if (map.current) {
         map.current.remove();
@@ -160,38 +164,8 @@ const CityMap = ({ alerts = [], onLocationSelect, className }) => {
               Setup Map Integration
             </h3>
             <p className="text-sm text-muted-foreground mb-6">
-              Enter your Mapbox public token to view the interactive city map with real-time alerts.
-              Get your token from{' '}
-              <a 
-                href="https://mapbox.com/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                mapbox.com
-              </a>
+              Failed to load map configuration. Please check your config.json file.
             </p>
-            <div className="flex gap-2">
-              <Input
-                type="password"
-                placeholder="pk.eyJ1IjoieW91ci11c2VybmFtZSIsImEiOiJhYmMxMjM..."
-                value={mapboxToken}
-                onChange={(e) => setMapboxToken(e.target.value)}
-                className="bg-background border-border"
-                onKeyPress={(e) => e.key === 'Enter' && handleTokenSubmit()}
-              />
-              <Button 
-                onClick={handleTokenSubmit}
-                disabled={!mapboxToken.trim() || isLoading}
-                className="bg-gradient-primary hover:shadow-glow-primary"
-              >
-                {isLoading ? (
-                  <Loader className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Search className="w-4 h-4" />
-                )}
-              </Button>
-            </div>
           </div>
         </div>
       </div>
@@ -201,20 +175,6 @@ const CityMap = ({ alerts = [], onLocationSelect, className }) => {
   return (
     <div className={cn("relative bg-secondary rounded-lg border border-border overflow-hidden", className)}>
       <div ref={mapContainer} className="absolute inset-0" />
-      
-      {/* Map Overlay UI */}
-      <div className="absolute top-4 left-4 right-4 z-10">
-        <div className="bg-background/80 backdrop-blur-sm rounded-lg border border-border p-3">
-          <div className="flex items-center gap-2">
-            <Search className="w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder="Search HSR Layout, Bengaluru..."
-              className="bg-transparent border-0 focus-visible:ring-0 text-sm"
-              onChange={(e) => onLocationSelect?.(e.target.value)}
-            />
-          </div>
-        </div>
-      </div>
 
       {/* Legend */}
       <div className="absolute bottom-4 left-4 z-10">
