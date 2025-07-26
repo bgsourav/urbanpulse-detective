@@ -33,5 +33,5 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v1
         with:
           path: dist
-          destination: your-gcs-bucket-name # TODO: Replace with your GCS bucket name
+          destination: pulse-bengaluru-ui # TODO: Replace with your GCS bucket name
           parent: false
