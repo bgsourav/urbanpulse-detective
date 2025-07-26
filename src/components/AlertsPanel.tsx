@@ -146,7 +146,7 @@ const AlertsPanel = ({ className }) => {
       </div>
 
       {/* Alerts List */}
-      <div className="p-4">
+      <div className="p-4 h-full border-border">
         {isLoading ? (
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
