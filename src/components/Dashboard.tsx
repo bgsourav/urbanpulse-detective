@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { Search, Settings, User, MapPin, Zap, Bell, Sun, Moon } from 'lucide-react';
+import { Settings, User, MapPin, Zap, Bell, Sun, Moon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import CityMap from './CityMap';
 import AlertsPanel from './AlertsPanel';
@@ -10,7 +9,6 @@ import TopicSelection from './TopicSelection';
 
 const Dashboard = () => {
   const [showTopicSelection, setShowTopicSelection] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState('HSR Layout, Bengaluru');
   const [userInterests, setUserInterests] = useState([]);
   const { theme, setTheme } = useTheme();
 
@@ -40,32 +38,16 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Search Bar */}
-            <div className="flex-1 max-w-md mx-8">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search areas in Bengaluru..."
-                  value={selectedLocation}
-                  onChange={(e) => setSelectedLocation(e.target.value)}
-                  className="pl-10 bg-secondary border-border focus:border-primary"
-                />
-                <MapPin className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-primary" />
+            {/* Location Display */}
+            <div className="flex-1 flex justify-center">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <MapPin className="w-4 h-4 text-primary" />
+                <span className="text-sm font-medium">HSR Layout, Bengaluru</span>
               </div>
             </div>
 
             {/* User Actions */}
             <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowTopicSelection(true)}
-                className="border-border hover:border-primary/50"
-              >
-                <Settings className="w-4 h-4 mr-2" />
-                Preferences
-              </Button>
-              
               <Button
                 variant="ghost"
                 size="sm"
@@ -98,7 +80,7 @@ const Dashboard = () => {
                 City Alert Hub
               </h2>
               <p className="text-sm text-muted-foreground">
-                Live monitoring of {selectedLocation}
+                Live monitoring of HSR Layout, Bengaluru
               </p>
             </div>
             
@@ -117,7 +99,19 @@ const Dashboard = () => {
             </div>
           </div>
           
-          <CityMap className="h-[calc(100vh-180px)]" />
+          <div className="relative">
+            <CityMap className="h-[calc(100vh-180px)]" />
+            
+            {/* Topic Selection Button */}
+            <Button
+              onClick={() => setShowTopicSelection(true)}
+              className="absolute top-4 right-4 bg-primary/90 hover:bg-primary shadow-glow-primary backdrop-blur-sm"
+              size="sm"
+            >
+              <Settings className="w-4 h-4 mr-2" />
+              Topics
+            </Button>
+          </div>
         </div>
 
         {/* Alerts Panel */}
