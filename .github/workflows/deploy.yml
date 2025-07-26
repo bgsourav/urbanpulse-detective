@@ -28,6 +28,14 @@ jobs:
       - name: Authorize Docker push
         run: gcloud auth configure-docker
 
+      - name: Create Artifact Registry Repository (if not exists)
+        run: |
+          gcloud artifacts repositories describe urbanpulse-detective --location=us-central1 || \
+          gcloud artifacts repositories create urbanpulse-detective \
+            --repository-format=docker \
+            --location=us-central1 \
+            --description="Docker repository for UrbanPulse Detective UI"
+
       - name: Build and push Docker image
         run: |
           docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/urbanpulse-detective:latest .
