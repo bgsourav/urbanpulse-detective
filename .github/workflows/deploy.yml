@@ -33,8 +33,5 @@ jobs:
         run: ls -la dist
 
       - name: Deploy to Google Cloud Storage
-        uses: google-github-actions/upload-cloud-storage@v1
-        with:
-          path: dist
-          destination: pulse-bengaluru-ui 
-          parent: false
+        run: |
+          gsutil -m rsync -r -d dist/ gs://pulse-bengaluru-ui
