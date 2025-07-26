@@ -183,7 +183,7 @@ const CityMap = ({ alerts = [], className }) => {
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <div className="w-3 h-3 bg-primary rounded-full"></div>
-              Traffic
+              Traffics
             </div>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <div className="w-3 h-3 bg-accent rounded-full"></div>
