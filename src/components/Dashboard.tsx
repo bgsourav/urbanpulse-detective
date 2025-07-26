@@ -86,13 +86,13 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="h-screen bg-background flex flex-col">
+    <div className="" style={{ marginLeft: '-10px'}}>
       {/* Header */}
       <header className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between w-full">
+        <div className="container mx-auto px-4 py-4" style={{ scale: '1.15' }}>
+          <div className="flex items-center justify-between w-full" style={{ marginLeft: '-10px' }}>
             {/* Logo and Title - leftmost */}
-            <div className="flex items-end gap-3 text-left">
+            <div className="flex items-end gap-3 text-left" style={{ marginLeft: '-120px' }}>
               <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center shadow-glow-primary">
                 <Zap className="w-6 h-6 text-primary-foreground" />
               </div>
@@ -103,7 +103,7 @@ const Dashboard = () => {
             </div>
 
             {/* Location Display - center */}
-            <div className="flex-1 flex justify-center">
+            <div className="flex-1 flex justify-center" style={{ marginRight: '300px' }}>
               <div className="flex items-center gap-2 text-muted-foreground">
                 {/* Search Icon */}
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
@@ -113,7 +113,7 @@ const Dashboard = () => {
             </div>
 
             {/* User Actions - rightmost */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2" style={{ marginRight: '-160px' }}>
               <Button
                 variant="ghost"
                 size="sm"
@@ -150,13 +150,6 @@ const Dashboard = () => {
             </div>
             
             <div className="flex items-center gap-4">
-              {/* Filter Buttons */}
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" className="text-xs">Traffic</Button>
-                <Button variant="outline" size="sm" className="text-xs">Weather</Button>
-                <Button variant="outline" size="sm" className="text-xs">Public Safety</Button>
-              </div>
-              
               <div className="flex items-center gap-1">
                 <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
                 <span className="text-xs text-muted-foreground">Live</span>
